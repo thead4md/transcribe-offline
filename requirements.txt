@@ -1,0 +1,8 @@
+# Magyar Beszédfelismerő — Offline
+# Requires macOS with Apple Silicon (M1/M2/M3/M4)
+
+mlx>=0.21.0
+mlx-whisper>=0.4.0
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+python-multipart>=0.0.9
