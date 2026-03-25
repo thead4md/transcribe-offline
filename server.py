@@ -10,7 +10,22 @@ import sys
 import time
 import tempfile
 import subprocess
+import warnings
 from pathlib import Path
+
+# ─── Hugging Face token (optional, suppresses rate-limit warnings) ───────────
+# Set HF_TOKEN as an environment variable, or create a .env file with:
+#   HF_TOKEN=hf_your_token_here
+# Get your free token at: https://huggingface.co/settings/tokens
+
+_hf_token = os.environ.get("HF_TOKEN", "")
+if _hf_token:
+    os.environ["HF_TOKEN"] = _hf_token
+    os.environ["HUGGING_FACE_HUB_TOKEN"] = _hf_token
+else:
+    # Suppress the "unauthenticated requests" warning when no token is set
+    os.environ["HF_HUB_DISABLE_IMPLICIT_TOKEN"] = "1"
+    warnings.filterwarnings("ignore", message=".*unauthenticated.*")
 
 from fastapi import FastAPI, File, UploadFile, HTTPException, Form
 from fastapi.middleware.cors import CORSMiddleware
@@ -48,6 +63,17 @@ DEFAULT_MODEL = os.environ.get(
 )
 
 MAX_UPLOAD_BYTES = 450 * 1024 * 1024  # 450 MB
+
+# Load .env file if it exists (for HF_TOKEN etc.)
+_env_file = Path(__file__).parent / ".env"
+if _env_file.exists():
+    for line in _env_file.read_text().splitlines():
+        line = line.strip()
+        if line and not line.startswith("#") and "=" in line:
+            key, _, value = line.partition("=")
+            os.environ.setdefault(key.strip(), value.strip())
+    if os.environ.get("HF_TOKEN"):
+        os.environ["HUGGING_FACE_HUB_TOKEN"] = os.environ["HF_TOKEN"]
 
 # ─── Lazy model loading ──────────────────────────────────────────────────────
 

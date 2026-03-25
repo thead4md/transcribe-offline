@@ -112,6 +112,29 @@ transcribe-offline/
 4. mlx-whisper runs inference directly on the Apple Silicon GPU/Neural Engine
 5. Results are returned to the browser — nothing leaves your machine
 
+## Hugging Face Token (Optional)
+
+The first run downloads the model from Hugging Face. Without a token you may see a warning about unauthenticated requests and slower download speeds. To fix this:
+
+1. Create a free account at [huggingface.co](https://huggingface.co)
+2. Generate a token at [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens)
+3. Create a `.env` file in the project root:
+
+```bash
+cp .env.example .env
+# Edit .env and add your token:
+# HF_TOKEN=hf_your_token_here
+```
+
+Or set it as an environment variable:
+
+```bash
+export HF_TOKEN=hf_your_token_here
+python server.py
+```
+
+This is completely optional — the app works without a token, just with slower initial downloads.
+
 ## Troubleshooting
 
 **"Server not reachable"** — Make sure `python server.py` is running in a terminal.
