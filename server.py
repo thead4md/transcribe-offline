@@ -276,6 +276,14 @@ if __name__ == "__main__":
     print("  100% local · Apple Silicon · No internet needed")
     print(f"  Model: {DEFAULT_MODEL}")
     print("═" * 58)
-    print(f"\n  → Open in browser: http://localhost:{port}\n")
+    print(f"\n  → Open in browser: http://localhost:{port}")
+    print(f"\n  IMPORTANT: use http:// not https://")
+    print(f"  (This is a local server without SSL.)\n")
 
-    uvicorn.run(app, host="127.0.0.1", port=port, log_level="info")
+    uvicorn.run(
+        app,
+        host="127.0.0.1",
+        port=port,
+        log_level="info",
+        timeout_keep_alive=30,
+    )
